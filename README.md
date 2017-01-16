@@ -1,5 +1,5 @@
 # shttp
-Let's make solid, encrypted Golang easy!
+Let's make solid, encrypted Golang webservers easy!
 
 ## What
 This package is an attempt to track best practices for a hardened and secure `net/http` server while getting out of your way as much as possible.
