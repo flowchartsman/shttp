@@ -85,27 +85,34 @@ func NewServerWithRedirect(addr string, certStrategy CertStrategy) (*Server, err
 // strategy will already have been provided
 func (s *Server) ListenAndServeTLS() error {
 	if s.redirect {
-		var redirectURL string
-		a := strings.SplitN(s.httpsServer.Addr, ":", 2)
 
-		if len(a) == 1 {
-			a = append(a, "")
+		var redirectURL string
+
+		serverAddr := s.httpsServer.Addr
+		if serverAddr == "" {
+			serverAddr = ":https"
 		}
 
-		if a[0] == "" {
+		host, port, err := net.SplitHostPort(serverAddr)
+
+		if err != nil {
+			return err
+		}
+
+		if host == "" {
 			redirectURL = "https://127.0.0.1"
 		} else {
-			redirectURL = "https://" + a[0]
+			redirectURL = "https://" + host
 		}
 
-		switch a[1] {
+		switch port {
 		case "", "https":
 		default:
-			redirectURL = redirectURL + ":" + a[1]
+			redirectURL = redirectURL + ":" + port
 		}
 
 		go func() {
-			err := http.ListenAndServe(a[0]+":http", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+			err := http.ListenAndServe(host+":http", http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 				http.Redirect(w, req, redirectURL+req.RequestURI, http.StatusMovedPermanently)
 			}))
 			if err != nil {
