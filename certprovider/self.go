@@ -17,9 +17,8 @@ import (
 )
 
 // SelfSign will generate a self-signed certificat for the server.
-// organization is the self-selected signing org (required)
-// host is a comma-separated list of IPs/domains to generate the signature for
-//   DEFAULT: "127.0.0.1,::1,example.com"
+// organization is the self-selected organization to sign as.
+// host is a comma-separated list of domains/hosts to sign for. Will default to "127.0.0.1,::1,example.com"
 func SelfSign(organization string, host string) (func(clientHello *tls.ClientHelloInfo) (*tls.Certificate, error), error) {
 	// note: code shamelessly cribbed from /src/crypto/tls/generate_cert.go, and is
 	// equivalent to the following:
