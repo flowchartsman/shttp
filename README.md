@@ -64,4 +64,7 @@ I'm also curious as to whether or not I should try and at least provide a method
 ### Architectural Support
 As mentioned in the article, at this time the the only architecture that supports [fast, optimized assembly versions](https://blog.cloudflare.com/go-crypto-bridging-the-performance-gap/) of the necessary crypto primitives is amd64, so this package will not compile on other architectures.  If and when such support becomes available, I will be sure to add it.
 
+### Let's Encrypt
+As of this first push, Let's Encrypt support is still being tested, and should be considered experimental. Of particular note are the concerns raised over rate limiting in the proposal mentioned above.
+
 <sup>1</sup>See *Architectural Support* above
