@@ -1,5 +1,5 @@
 # shttp
-[![GoDoc](https://godoc.org/github.com/alaska/shttp?status.svg)](https://godoc.org/github.com/alaska/shttp) [![Go Report Card](https://goreportcard.com/badge/github.com/alaska/shttp](https://goreportcard.com/report/github.com/alaska/shttp)
+[![GoDoc](https://godoc.org/github.com/alaska/shttp?status.svg)](https://godoc.org/github.com/alaska/shttp) [![Go Report Card](https://goreportcard.com/badge/github.com/alaska/shttp)](https://goreportcard.com/report/github.com/alaska/shttp)
 Let's make solid, encrypted Golang webservers easy!
 
 ## What
