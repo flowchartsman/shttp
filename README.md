@@ -36,7 +36,7 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	s := shttp.NewServerWithRedirect(":8080", provider)
+	s := shttp.NewServerWithRedirect("", provider)
 
 	http.HandleFunc("/", handler)
 
