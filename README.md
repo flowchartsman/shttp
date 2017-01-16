@@ -19,9 +19,11 @@ I was also very influenced by [George Tankersley](https://github.com/gtank)'s, e
 ```go
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/alaska/shttp"
+	"github.com/alaska/shttp/certprovider"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -29,13 +31,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	s, err := shttp.NewServerWithRedirect("", shttp.SelfCert("testcorp", ""))
+	provider, err := certprovider.SelfSign("testcorp", "")
 	if err != nil {
-		panic(err.Error())
+		log.Fatalln(err.Error())
 	}
+
+	s := shttp.NewServerWithRedirect(":8080", provider)
+
 	http.HandleFunc("/", handler)
+
 	if err := s.ListenAndServeTLS(); err != nil {
-		panic(err.Error())
+		log.Fatalln(err.Error())
 	}
 }
 ```
