@@ -57,16 +57,18 @@ $
 ```
 
 ## Todo
-### Audit
-Currently this library is still in development (though I am anxious to see it to stability as soon as possible), but it could use an audit by someone who knows crypto better than me (which is probably pretty much anyone involved in crypto).  I'd especially be interested in whether or not the self-signed cert strategy is something I should even bother leaving in or not, but at the very least I'd like to make sure that the code I shamelessly cribbed from [generate_cert.go](https://golang.org/src/crypto/tls/generate_cert.go) is correct.
+### Best practices
+I'm keen on any suggestions on low-hanging best practices I can implement. Feel free to send me a PR with any ideas you might have. Currently the timeouts are not adjustable, and are a simple first pass. I'm not sure what the most sensible defaults are, and whether they should be able to be tweaked, either directly or using a profile.
 
-I'd also be interested in any suggestions on low-hanging best practices I can implement. Feel free to send me a PR with any ideas you might have. Currently the timeouts are not adjustable, but perhaps they should be. Any further options would probably see me adopting the functional `...optionFunc` approach.
+### Security Audit
+This library is still in development (though I am anxious to see it to stability as soon as possible), but it could use an audit by someone who knows crypto better than me (which is probably pretty much anyone involved in crypto).  I'd especially be interested in whether or not the self-signed cert strategy is something I should even bother leaving in or not, but at the very least I'd like to make sure that the code I shamelessly cribbed from [generate_cert.go](https://golang.org/src/crypto/tls/generate_cert.go) is correct.
 
-### Feedback
+
+### Integration
 I'm also curious as to whether or not I should try and at least provide a method to return a standard `net/http` server.  This would conceivably allow shttp to act as a convenient drop-in replacement for `net/http`, though it would also allow for accidental mucking about with the internals of the server and TLS configuration, and I would generally prefer to err on the side of caution when making an "easy" library for a hardened web server with crypto.
 
 ## Caveats
-### STILL DEVELOPMENT
+### STILL IN DEVELOPMENT
 Seriously, it's not even stable; don't put it in production yet.
 
 ### Architectural Support
