@@ -7,8 +7,6 @@ import (
 	"net"
 	"net/http"
 	"time"
-
-	"github.com/alaska/shttp/certprovider"
 )
 
 // Server is a hardened HTTPS server
@@ -18,7 +16,7 @@ type Server struct {
 }
 
 // NewServer returns a new server object using the given certificate provider
-func NewServer(addr string, certProvider certprovider.Provider) *Server {
+func NewServer(addr string, certProvider func(clientHello *tls.ClientHelloInfo) (*tls.Certificate, error)) *Server {
 	hs := &http.Server{
 		Addr: addr,
 		TLSConfig: &tls.Config{
@@ -53,7 +51,7 @@ func NewServer(addr string, certProvider certprovider.Provider) *Server {
 // NewServerWithRedirect will create a new server, but will also spin up a
 // redirect handler on port 80 to redirect all unencrypted traffic to the HTTPS
 // base URL and port you have defined in addr
-func NewServerWithRedirect(addr string, certProvider certprovider.Provider) *Server {
+func NewServerWithRedirect(addr string, certProvider func(clientHello *tls.ClientHelloInfo) (*tls.Certificate, error)) *Server {
 	s := NewServer(addr, certProvider)
 	s.redirect = true
 	return s

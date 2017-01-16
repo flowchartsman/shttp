@@ -7,7 +7,7 @@ import (
 
 // Manual is the certificate provider you would choose if you already have your
 // own .pem .crt or .key files
-func Manual(certFile string, keyFile string) (Provider, error) {
+func Manual(certFile string, keyFile string) (func(clientHello *tls.ClientHelloInfo) (*tls.Certificate, error), error) {
 	if certFile == "" || keyFile == "" {
 		return nil, fmt.Errorf("must provide certFile and keyFile")
 	}

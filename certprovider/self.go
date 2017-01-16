@@ -20,7 +20,7 @@ import (
 // organization is the self-selected signing org (required)
 // host is a comma-separated list of IPs/domains to generate the signature for
 //   DEFAULT: "127.0.0.1,::1,example.com"
-func SelfSign(organization string, host string) (Provider, error) {
+func SelfSign(organization string, host string) (func(clientHello *tls.ClientHelloInfo) (*tls.Certificate, error), error) {
 	// note: code shamelessly cribbed from /src/crypto/tls/generate_cert.go, and is
 	// equivalent to the following:
 	// go run generate_cert.go --host <host string> --ca --start-date "Jan 1 00:00:00 1970" --duration=1000000h
