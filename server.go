@@ -21,7 +21,7 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 )
 
-// CertStrategy represents a particular method of certification provviding
+// CertStrategy represents a particular method of certification provisioning
 type CertStrategy func(*http.Server) error
 
 // Server is a hardened HTTPS server
