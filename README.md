@@ -36,6 +36,16 @@ func main() {
 }
 ```
 
+```
+$ curl -k https://localhost/stuff
+You've accessed stuff
+$ curl -k http://localhost/stuff
+<a href="https://127.0.0.1/stuff">Moved Permanently</a>.
+$ curl -kL http://localhost/stuff
+You've accessed stuff
+$
+```
+
 ## Todo
 ### Audit
 Currently this library is in beta, though I am anxious to see it to stability as soon as possible, but it could use an audit by someone who knows crypto better than me (which is probably pretty much anyone involved in crypto).  I'd especially be interested in whether or not the self-signed cert strategy is something I should even bother leaving in or not, but at the very least I'd like to make sure that the code I shamelessly cribbed from [generate_cert.go](https://golang.org/src/crypto/tls/generate_cert.go) is correct.
