@@ -18,41 +18,121 @@ I was also very influenced by [George Tankersley](https://github.com/gtank)'s, e
 ## How
 ```go
 import (
-	"fmt"
-	"log"
-	"net/http"
+        "fmt"
+        "log"
+        "net/http"
 
-	"github.com/alaska/shttp"
-	"github.com/alaska/shttp/certprovider"
+        "github.com/alaska/shttp"
+        "github.com/alaska/shttp/certprovider"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "You've accessed %s", r.URL.Path[1:])
+        fmt.Fprintf(w, "You've accessed %s\n", r.URL.Path[1:])
 }
 
 func main() {
-	provider, err := certprovider.SelfSign("testcorp", "")
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
+        provider, err := certprovider.SelfSign("testcorp", "127.0.0.1,::1")
+        if err != nil {
+                log.Fatalln(err.Error())
+        }
 
-	s := shttp.NewServerWithRedirect("", provider)
+        s := shttp.NewServerWithRedirect(":https", provider)
 
-	http.HandleFunc("/", handler)
+        http.HandleFunc("/", handler)
 
-	if err := s.ListenAndServeTLS(); err != nil {
-		log.Fatalln(err.Error())
-	}
+        if err := s.ListenAndServeTLS(); err != nil {
+                log.Fatalln(err.Error())
+        }
 }
+
 ```
 
 ```
 $ curl -k https://localhost/stuff
 You've accessed stuff
-$ curl -k http://localhost/stuff
-<a href="https://127.0.0.1/stuff">Moved Permanently</a>.
-$ curl -kL http://localhost/stuff
-You've accessed stuff
+$ curl -k http://localhost/things
+<a href="https://127.0.0.1/things">Moved Permanently</a>.
+
+$ curl -kL http://localhost/things
+You've accessed things
+
+$ openssl s_client -showcerts -cipher ECDHE-RSA-AES256-GCM-SHA384 -connect 127.0.0.1:443 </dev/null
+CONNECTED(00000003)
+depth=0 O = testcorp
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 O = testcorp
+verify error:num=10:certificate has expired
+notAfter=May 29 16:00:00 1981 GMT
+verify return:1
+depth=0 O = testcorp
+notAfter=May 29 16:00:00 1981 GMT
+verify return:1
+---
+Certificate chain
+ 0 s:/O=testcorp
+   i:/O=testcorp
+-----BEGIN CERTIFICATE-----
+MIIDCzCCAfOgAwIBAgIQJqtozqpBq/KgQDnrAo4ISDANBgkqhkiG9w0BAQsFADAT
+MREwDwYDVQQKEwh0ZXN0Y29ycDAeFw03MDAxMDEwMDAwMDBaFw04MTA1MjkxNjAw
+MDBaMBMxETAPBgNVBAoTCHRlc3Rjb3JwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAw3CLrQtbwUHq9FbxE0wkOO6r2YnO7eFNEp9Xzru2/Bo4OFFLLca/
+7pRM+Z/lzu6terB2aa7W5jhFp1ePyTvruEftSaRsrPLAeoJ9ayBrJSjn5vMMLo8I
+q278nrdvPqmtFSh/AchxFAdZAAngRcOrC0hHs/1D8qZ/6krU9jpWB7L8oTLOX8hB
+KEUAN0mkFfdD2/qs2kjJw8JPgOg3gY13qcLfQ4gqiuwujotifEsnxly95qLmoHTJ
+HiwfVjwof9ZLyicXvW+EeSd+wANVessPtolWQChnP8/KcYOjX7QXnUWCAKKe55jA
+oXGlU44Qymzj5Pqd9hNSTfXBa5mMCFJbfQIDAQABo1swWTAOBgNVHQ8BAf8EBAMC
+AqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAhBgNVHREE
+GjAYhwR/AAABhxAAAAAAAAAAAAAAAAAAAAABMA0GCSqGSIb3DQEBCwUAA4IBAQCH
+23rXyP5vmFm060zquVTXKnBjwc1vuFzUd+/XVBzYfsRW0NDZvzILSf6bOkEaZq/Y
+nSAR5oWSDsbbOPsqh/BziivAVL3dyj8dJmLqaUS2lko8cMB5rw0HcqGn4V7RjD68
+y1A1AmZXG0Jo5Ulo2iXRrqF0CDMa2FNTAeTBsNhgZEXotkn8HMqASaaSSsO/+gTu
+a1PrD71GYqD9FHmLhnY3GysmhLoX9gDJF7DWTpssEhEdHgp3fxz90vQ9s3UDvgb0
+EipWe4+OzG31Ze0+Yyk1zkSc0ue0cDXqCpD/i4TOqhmv5PRl66i/Jj93UYotJ8cA
+zPGYVRvDmAnP75bEyanI
+-----END CERTIFICATE-----
+---
+Server certificate
+subject=/O=testcorp
+issuer=/O=testcorp
+---
+No client certificate CA names sent
+Peer signing digest: SHA384
+Server Temp Key: ECDH, P-256, 256 bits
+---
+SSL handshake has read 1389 bytes and written 266 bytes
+---
+New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+    Session-ID: 5B4DB1A851ADFA7BBA98AC845905092F20DD89BB7C510B777760FF581F12DCF2
+    Session-ID-ctx:
+    Master-Key: 1AEB005E20921023757DA783A32FDA5C5AA5C9615ED07E6EF0B0A7EF0CD79F0531A84EE2AADC2B00AB5589B8C7BACE76
+    Key-Arg   : None
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket:
+    0000 - bc ba f4 a0 0b 22 f9 68-bd 33 8a ac 57 6b a8 4f   .....".h.3..Wk.O
+    0010 - 87 ae b2 47 f4 70 17 80-c5 bd 00 c7 7b c8 68 c3   ...G.p......{.h.
+    0020 - 11 06 bc 52 eb 2f 38 d5-c4 7f 61 0f f9 34 a7 c5   ...R./8...a..4..
+    0030 - 55 05 f0 f5 ef 42 9d 10-4e a4 dc 41 60 d1 c6 2c   U....B..N..A`..,
+    0040 - 76 28 48 d3 fd 84 26 89-2e 34 4c 51 44 e0 86 c9   v(H...&..4LQD...
+    0050 - c4 31 16 f6 db 34 ef c2-09 1b 45 ff 3c aa cb 9c   .1...4....E.<...
+    0060 - 17 e7 53 0a 83 f9 fc 6e-cd 66 91 a5 d9 77 a9 0b   ..S....n.f...w..
+    0070 - fa c2 0b 0c 69 a2 15 c9-                          ....i...
+
+    Start Time: 1484688351
+    Timeout   : 300 (sec)
+    Verify return code: 10 (certificate has expired)
+---
+DONE
 $
 ```
 
