@@ -1,4 +1,4 @@
-/* Package shttp is an attempt to implement best practices for a hardened and secure http.Server, while getting out of your way as much as possible.
+/*Package shttp is an attempt to implement best practices for a hardened and secure http.Server, while getting out of your way as much as possible.
 
 Example Usage
 
