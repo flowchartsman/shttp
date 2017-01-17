@@ -100,3 +100,11 @@ func (s *Server) ListenAndServeTLS() error {
 	}
 	return s.httpsServer.ListenAndServeTLS("", "")
 }
+
+// StdServer returns the underlying *http.Server for further configuration.
+// Obviously, this can be used to undo most of the best practices this library
+// attempts to make standard, so it should be used with caution, sparingly, and
+// only when necessary
+func (s *Server) StdServer() *http.Server {
+	return s.httpsServer
+}
