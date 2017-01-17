@@ -94,7 +94,7 @@ func (s *Server) ListenAndServeTLS() error {
 				http.Redirect(w, req, redirectURL+req.RequestURI, http.StatusMovedPermanently)
 			}))
 			if err != nil {
-				panic(err.Error())
+				panic("error in serving the http -> https redirect:" + err.Error())
 			}
 		}()
 	}
