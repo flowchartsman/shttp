@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"net"
 	"net/http"
-	"time"
 )
 
 // Server is a hardened HTTPS server
@@ -31,9 +30,6 @@ func NewServer(addr string, certProvider func(clientHello *tls.ClientHelloInfo) 
 			CipherSuites:   cipherSuites,
 			GetCertificate: certProvider,
 		},
-		// Sane timeouts
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 5 * time.Second,
 	}
 
 	//TODO: Options? Timeout?
@@ -98,6 +94,11 @@ func (s *Server) ListenAndServeTLS() error {
 			}
 		}()
 	}
+
+	// Apply version-specific best practices
+	applyTimeouts(s.httpsServer)
+
+	// Start the server
 	return s.httpsServer.ListenAndServeTLS("", "")
 }
 
